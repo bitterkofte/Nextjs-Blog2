@@ -8,7 +8,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     background: rgb(0, 82, 82);
-    text-decoration: none;
+    a{text-decoration: none;}
+    h1,h2{margin:0px;}
   }
 `;
 

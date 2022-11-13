@@ -16,12 +16,14 @@ const HeaderInner = styled.div`
   justify-content: space-between;
 `;
 
+
+
 export default () => (
   <HeaderDiv>
     <HeaderInner>
       <Button href="/">Ana Sayfa</Button>
-      <Button href="/about">Hakkımda</Button>
       <Button href="/blog">Blog</Button>
+      <Button href="/about">Hakkımda</Button>
       <Button href="/contact">İletişim</Button>
     </HeaderInner>
   </HeaderDiv>
