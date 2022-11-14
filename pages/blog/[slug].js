@@ -1,46 +1,57 @@
+import fs from "fs";
+import matter from "gray-matter";
+import md from "markdown-it";
 import { useRouter } from "next/router";
 import Error from "next/error";
 import Layout from "../../components/Layout";
 
-const data = [{
-  slug: "yazi1",
-  title: "Yazı 111",
-  text: `1 It is a long established fact that a reader will be distracted by the
-  readable content of a page when looking at its layout. The point of using
-  Lorem Ipsum is that it has a more-or-less normal distribution of letters, as
-  opposed to using 'Content here, content here', making it look like readable
-  English. Many desktop publishing packages and web page editors now use Lorem
-  Ipsum as their default model text, and a search for 'lorem ipsum' will
-  uncover many web sites still in their infancy. Various versions have evolved
-  over the years, sometimes by accident, sometimes on purpose`
-  },
-  {
-    slug: "yazi2",
-    title: "Yazı 222",
-    text: `2 It is a long established fact that a reader will be distracted by the
-    readable content of a page when looking at its layout. The point of using
-    Lorem Ipsum is that it has a more-or-less normal distribution of letters, as
-    opposed to using 'Content here, content here', making it look like readable
-    English. Many desktop publishing packages and web page editors now use Lorem
-    Ipsum as their default model text, and a search for 'lorem ipsum' will
-    uncover many web sites still in their infancy. Various versions have evolved
-    over the years, sometimes by accident, sometimes on purpose`
-  }
-]
+export default ({ frontmatter, content }) => {
+  const { title, author, category, date, bannerImage, tags } = frontmatter;
 
-export default () => {
-  const router = useRouter()
-  const {slug} = router.query
-  let outcome = data.find((dataItem) =>  dataItem.slug === slug);
+  // const router = useRouter()
+  // const {slug} = router.query
+  // let outcome = data.find((dataItem) =>  dataItem.slug === slug);
 
-  if (!outcome) {
-    return <Error statusCode={404} />
-  }
+  // if (!outcome) {
+  //   return <Error statusCode={404} />
+  // }
 
   return (
-    <Layout title={outcome?.title}>
-    <h3>slug: {slug}</h3>
-    <p>{outcome?.text}</p>
+    <Layout title={title}>
+    <h2>
+        {author} || {date}
+      </h2>
+      <h3>
+        {category} || {tags.join()}
+      </h3>
+      <div dangerouslySetInnerHTML={{ __html: md().render(content) }} />
   </Layout>
   )
 };
+
+export async function getStaticPaths() {
+  // Get list of all files from our posts directory
+  const files = fs.readdirSync("posts");
+  // Generate a path for each one
+  const paths = files.map((fileName) => ({
+    params: {
+      slug: fileName.replace(".md", ""),
+    },
+  }));
+  // return list of paths
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params: { slug } }) {
+  const fileName = fs.readFileSync(`posts/${slug}.md`, "utf-8");
+  const { data: frontmatter, content } = matter(fileName);
+  return {
+    props: {
+      frontmatter,
+      content,
+    },
+  };
+}
