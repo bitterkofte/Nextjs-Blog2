@@ -1,10 +1,9 @@
 import Header from "./Header";
 import styled from "styled-components";
 import { Helmet } from 'react-helmet';
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import Clock from 'react-live-clock';
-
-
 
 const BodyDiv = styled.div`
   /* font-family: 'Josefin Sans', sans-serif; */
@@ -15,8 +14,9 @@ const BodyDiv = styled.div`
 `;
 
 const Footer = styled.footer`
+  backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;  
+  position: fixed;
   bottom: 0;
   width: 100vw;
 `;
@@ -24,8 +24,10 @@ const Footer = styled.footer`
 const FooterInner = styled.div`
   /* max-width: 800px; */
   display: flex;
-  /* justify-content: space-between; */
-  align-content: space-between;
+  justify-content: center;
+  gap: 50px;
+  /* align-content: space-between; */
+  align-items: center;
   
   margin: auto;
   padding: 20px;
@@ -36,18 +38,11 @@ const FooterInner = styled.div`
   a:link{
     color: rgb(128, 128, 128);
   }
+  a:visited {
+    color: rgb(128, 128, 128);
+  }
   a:hover {
     color: rgb(0, 122, 122);
-  }
-
-  #first-child{
-    /* flex: auto; */
-  }
-  #second-child{
-    /* flex-grow: 4; */
-  }
-  #third-child{
-    /* flex: auto; */
   }
 `;
 
@@ -59,27 +54,28 @@ const Content = styled.div`
 const ContentInner = styled.div`
   padding: 20px;
   text-align: justify;
+  margin-bottom: 90px;
 `;
 
 const H1 = styled.h1`
   padding: 20px 20px 0 20px;
+  margin-top: 90px;
 `;
 
+export default ({ title, children }) => {
+  const current = new Date();
+  const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+  let time = new Date().toLocaleTimeString();
+  
+  // console.log("ZAMAN",time);
+  const [currentTime, setCurrentTime] = useState(time);
 
+  const updateTime = () => {
+    let time = new Date().toLocaleTimeString();
+    setCurrentTime(time);  }
+  setInterval(updateTime, 1000);
 
-// document.getElementById("date").innerHTML = new Date();
-const current = new Date();
-// const time = `${current.toLocaleTimeString()}`;
-// const [time, setTime] = useState(0);
-// useEffect(() => {
-//   const now = Date.now()
-//   setTime(now.getTime());
-// }, []);
-
-const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
-
-
-export default ({ title, children }) => (
+  return(
   <BodyDiv>
     <Helmet>
         <title>Modified</title>
@@ -105,13 +101,12 @@ export default ({ title, children }) => (
         </span>
 
         <span id="third-child">
-          {/* <Clock
-          format={'h:mm:ssa'}
-          // style={{fontSize: '1.5em'}}
+          {/* <Clock format={'hh:mm:ssa'}
           ticking={true} /> */}
-          14:26:13
+          {/* 14:26:13 */}
+          {currentTime}
         </span>
       </FooterInner>
     </Footer>
   </BodyDiv>
-);
+)};

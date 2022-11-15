@@ -4,6 +4,11 @@ import md from "markdown-it";
 import { useRouter } from "next/router";
 import Error from "next/error";
 import Layout from "../../components/Layout";
+import styled from "styled-components";
+
+const Info = styled.span`
+  font-style: italic;
+`
 
 export default ({ frontmatter, content }) => {
   const { title, author, category, date, bannerImage, tags } = frontmatter;
@@ -18,12 +23,9 @@ export default ({ frontmatter, content }) => {
 
   return (
     <Layout title={title}>
-    <h2>
-        {author} || {date}
-      </h2>
-      <h3>
-        {category} || {tags.join()}
-      </h3>
+      <Info>
+        {author} • {date}
+      </Info>
       <div dangerouslySetInnerHTML={{ __html: md().render(content) }} />
   </Layout>
   )
